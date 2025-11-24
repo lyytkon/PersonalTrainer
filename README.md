@@ -4,7 +4,7 @@ Front End -ohjelmoinnin harjoitustyö.
 
 ## Rakenne
 
-**osa1/**
+### osa1/
 - Asiakkaiden ja harjoitusten listaussivut navigaatiolla
 - Järjestely ja suodatus
 - Päivämäärien muotoilu
