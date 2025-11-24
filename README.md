@@ -11,10 +11,10 @@ Front End -ohjelmoinnin harjoitustyö.
 - Asiakkaan nimi harjoituslistalla
 ### Sivut
 Asiakkaat: 
-<img width="1376" height="956" alt="image" src="https://github.com/user-attachments/assets/07e603f6-149a-4e13-b4ec-46bd7d6a9c07" />
+<img width="1263" height="1212" alt="image" src="https://github.com/user-attachments/assets/b8779a4b-0e29-45d7-9ed3-e85d68989a11" />
 
 Harjoitusket:
-<img width="1343" height="723" alt="image" src="https://github.com/user-attachments/assets/fd349a29-ffff-4abf-9af1-9836f88a0cac" />
+<img width="908" height="891" alt="image" src="https://github.com/user-attachments/assets/b1e2edc4-2fae-4b20-8c20-b58846ce268a" />
 
 ```bash
 cd osa1
