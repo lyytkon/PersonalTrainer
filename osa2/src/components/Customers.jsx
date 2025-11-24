@@ -16,6 +16,7 @@ import {
   Alert
 } from '@mui/material';
 import AddCustomer from './AddCustomer';
+import EditCustomer from './EditCustomer';
 
 function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -208,6 +209,9 @@ function Customers() {
                   Kaupunki
                 </TableSortLabel>
               </TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
+                Toiminnot
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -220,6 +224,12 @@ function Customers() {
                 <TableCell>{customer.streetaddress}</TableCell>
                 <TableCell>{customer.postcode}</TableCell>
                 <TableCell>{customer.city}</TableCell>
+                <TableCell>
+                  <EditCustomer 
+                    customer={customer} 
+                    onCustomerUpdated={handleCustomerAdded}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
