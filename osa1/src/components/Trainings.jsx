@@ -37,7 +37,6 @@ function Trainings() {
       .then(data => {
         console.log('Haettu harjoitusdata:', data);
         
-        // Haetaan asiakastiedot jokaiselle harjoitukselle
         const trainingsWithCustomers = data._embedded.trainings.map(training => {
           if (training._links.customer) {
             return fetch(training._links.customer.href)
@@ -156,10 +155,10 @@ function Trainings() {
       </Box>
 
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 200 }}>
                 <TableSortLabel
                   active={orderBy === 'date'}
                   direction={orderBy === 'date' ? order : 'asc'}
@@ -168,7 +167,7 @@ function Trainings() {
                   Päivämäärä
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 200 }}>
                 <TableSortLabel
                   active={orderBy === 'activity'}
                   direction={orderBy === 'activity' ? order : 'asc'}
@@ -177,7 +176,7 @@ function Trainings() {
                   Aktiviteetti
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 100 }}>
                 <TableSortLabel
                   active={orderBy === 'duration'}
                   direction={orderBy === 'duration' ? order : 'asc'}
@@ -186,7 +185,7 @@ function Trainings() {
                   Kesto (min)
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 180 }}>
                 <TableSortLabel
                   active={orderBy === 'customerName'}
                   direction={orderBy === 'customerName' ? order : 'asc'}

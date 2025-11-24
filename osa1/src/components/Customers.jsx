@@ -118,10 +118,10 @@ function Customers() {
       </Box>
 
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
                 <TableSortLabel
                   active={orderBy === 'firstname'}
                   direction={orderBy === 'firstname' ? order : 'asc'}
@@ -130,7 +130,7 @@ function Customers() {
                   Etunimi
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
                 <TableSortLabel
                   active={orderBy === 'lastname'}
                   direction={orderBy === 'lastname' ? order : 'asc'}
@@ -139,7 +139,7 @@ function Customers() {
                   Sukunimi
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 200 }}>
                 <TableSortLabel
                   active={orderBy === 'email'}
                   direction={orderBy === 'email' ? order : 'asc'}
@@ -148,7 +148,7 @@ function Customers() {
                   S-posti
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 150 }}>
                 <TableSortLabel
                   active={orderBy === 'phone'}
                   direction={orderBy === 'phone' ? order : 'asc'}
@@ -157,7 +157,7 @@ function Customers() {
                   Puhelin
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 180 }}>
                 <TableSortLabel
                   active={orderBy === 'streetaddress'}
                   direction={orderBy === 'streetaddress' ? order : 'asc'}
@@ -166,7 +166,7 @@ function Customers() {
                   Osoite
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 100 }}>
                 <TableSortLabel
                   active={orderBy === 'postcode'}
                   direction={orderBy === 'postcode' ? order : 'asc'}
@@ -175,7 +175,7 @@ function Customers() {
                   Postinumero
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
                 <TableSortLabel
                   active={orderBy === 'city'}
                   direction={orderBy === 'city' ? order : 'asc'}
