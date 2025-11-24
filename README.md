@@ -4,12 +4,12 @@ Front End -ohjelmoinnin harjoitustyö.
 
 ## Rakenne
 
-### osa1/
+## Osa1
 - Asiakkaiden ja harjoitusten listaussivut navigaatiolla
 - Järjestely ja suodatus
 - Päivämäärien muotoilu
 - Asiakkaan nimi harjoituslistalla
-## Sivut
+### Sivut
 Asiakkaat: 
 <img width="1376" height="956" alt="image" src="https://github.com/user-attachments/assets/07e603f6-149a-4e13-b4ec-46bd7d6a9c07" />
 
@@ -22,12 +22,12 @@ npm install
 npm run dev
 ```
 
-**osa2/**
+## Osa2
 - (Tulossa)
   
-- **osa3/**
+## Osa3
 - (Tulossa)
   
-- **osa4/**
+## Osa4
 - (Tulossa)
 
