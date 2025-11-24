@@ -1,4 +1,4 @@
-# Personal Trainer App
+﻿# Personal Trainer App
 
 Front End -ohjelmoinnin harjoitustyö.
 
