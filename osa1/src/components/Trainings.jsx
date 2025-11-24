@@ -20,12 +20,7 @@ function Trainings() {
   const [loading, setLoading] = useState(true);
   const [orderBy, setOrderBy] = useState('date');
   const [order, setOrder] = useState('desc');
-  const [filters, setFilters] = useState({
-    activity: '',
-    customerName: '',
-    duration: '',
-    date: ''
-  });
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchTrainings();
@@ -73,11 +68,8 @@ function Trainings() {
     setOrderBy(property);
   };
 
-  const handleFilterChange = (field, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
   };
 
   const getCustomerName = (training) => {
@@ -89,16 +81,19 @@ function Trainings() {
 
   const sortedAndFilteredTrainings = () => {
     let filtered = trainings.filter(training => {
+      if (!searchTerm) return true;
+      
+      const search = searchTerm.toLowerCase();
       const activity = training.activity?.toLowerCase() || '';
       const customerName = getCustomerName(training).toLowerCase();
       const duration = training.duration?.toString() || '';
       const date = training.date ? dayjs(training.date).format('DD.MM.YYYY HH:mm') : '';
 
       return (
-        activity.includes(filters.activity.toLowerCase()) &&
-        customerName.includes(filters.customerName.toLowerCase()) &&
-        duration.includes(filters.duration) &&
-        date.includes(filters.date)
+        activity.includes(search) ||
+        customerName.includes(search) ||
+        duration.includes(search) ||
+        date.includes(search)
       );
     });
 
@@ -146,9 +141,19 @@ function Trainings() {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
-        Harjoitukset
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h4">
+          Harjoitukset
+        </Typography>
+        <TextField
+          label="Etsi harjoituksia"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          placeholder="Etsi aktiviteetilla, asiakkaalla, päivämäärällä..."
+          sx={{ width: '450px' }}
+        />
+      </Box>
 
       <TableContainer component={Paper}>
         <Table>
@@ -162,15 +167,6 @@ function Trainings() {
                 >
                   Päivämäärä
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.date}
-                  onChange={(e) => handleFilterChange('date', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -180,15 +176,6 @@ function Trainings() {
                 >
                   Aktiviteetti
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.activity}
-                  onChange={(e) => handleFilterChange('activity', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -198,15 +185,6 @@ function Trainings() {
                 >
                   Kesto (min)
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.duration}
-                  onChange={(e) => handleFilterChange('duration', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -216,15 +194,6 @@ function Trainings() {
                 >
                   Asiakas
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.customerName}
-                  onChange={(e) => handleFilterChange('customerName', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
             </TableRow>
           </TableHead>

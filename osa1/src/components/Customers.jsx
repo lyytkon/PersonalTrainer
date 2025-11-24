@@ -19,15 +19,7 @@ function Customers() {
   const [loading, setLoading] = useState(true);
   const [orderBy, setOrderBy] = useState('lastname');
   const [order, setOrder] = useState('asc');
-  const [filters, setFilters] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    phone: '',
-    streetaddress: '',
-    postcode: '',
-    city: ''
-  });
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchCustomers();
@@ -59,15 +51,15 @@ function Customers() {
     setOrderBy(property);
   };
 
-  const handleFilterChange = (field, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
   };
 
   const sortedAndFilteredCustomers = () => {
     let filtered = customers.filter(customer => {
+      if (!searchTerm) return true;
+      
+      const search = searchTerm.toLowerCase();
       const firstname = customer.firstname?.toLowerCase() || '';
       const lastname = customer.lastname?.toLowerCase() || '';
       const email = customer.email?.toLowerCase() || '';
@@ -77,13 +69,13 @@ function Customers() {
       const city = customer.city?.toLowerCase() || '';
 
       return (
-        firstname.includes(filters.firstname.toLowerCase()) &&
-        lastname.includes(filters.lastname.toLowerCase()) &&
-        email.includes(filters.email.toLowerCase()) &&
-        phone.includes(filters.phone.toLowerCase()) &&
-        streetaddress.includes(filters.streetaddress.toLowerCase()) &&
-        postcode.includes(filters.postcode.toLowerCase()) &&
-        city.includes(filters.city.toLowerCase())
+        firstname.includes(search) ||
+        lastname.includes(search) ||
+        email.includes(search) ||
+        phone.includes(search) ||
+        streetaddress.includes(search) ||
+        postcode.includes(search) ||
+        city.includes(search)
       );
     });
 
@@ -111,9 +103,19 @@ function Customers() {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
-        Asiakkaat
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h4">
+          Asiakkaat
+        </Typography>
+        <TextField
+          label="Etsi asiakkaita"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          placeholder="Etsi nimellä, sähköpostilla, puhelimella..."
+          sx={{ width: '400px' }}
+        />
+      </Box>
 
       <TableContainer component={Paper}>
         <Table>
@@ -127,15 +129,6 @@ function Customers() {
                 >
                   Etunimi
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.firstname}
-                  onChange={(e) => handleFilterChange('firstname', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -145,15 +138,6 @@ function Customers() {
                 >
                   Sukunimi
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.lastname}
-                  onChange={(e) => handleFilterChange('lastname', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -163,15 +147,6 @@ function Customers() {
                 >
                   S-posti
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.email}
-                  onChange={(e) => handleFilterChange('email', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -181,15 +156,6 @@ function Customers() {
                 >
                   Puhelin
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.phone}
-                  onChange={(e) => handleFilterChange('phone', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -199,15 +165,6 @@ function Customers() {
                 >
                   Osoite
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.streetaddress}
-                  onChange={(e) => handleFilterChange('streetaddress', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -217,15 +174,6 @@ function Customers() {
                 >
                   Postinumero
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.postcode}
-                  onChange={(e) => handleFilterChange('postcode', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -235,15 +183,6 @@ function Customers() {
                 >
                   Kaupunki
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.city}
-                  onChange={(e) => handleFilterChange('city', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
             </TableRow>
           </TableHead>
