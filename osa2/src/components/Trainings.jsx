@@ -12,8 +12,11 @@ import {
   CircularProgress,
   TextField,
   TableSortLabel,
-  Box
+  Box,
+  Snackbar,
+  Alert
 } from '@mui/material';
+import AddTraining from './AddTraining';
 
 function Trainings() {
   const [trainings, setTrainings] = useState([]);
@@ -21,6 +24,11 @@ function Trainings() {
   const [orderBy, setOrderBy] = useState('date');
   const [order, setOrder] = useState('desc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
 
   useEffect(() => {
     fetchTrainings();
@@ -69,6 +77,19 @@ function Trainings() {
 
   const handleSearchChange = (value) => {
     setSearchTerm(value);
+  };
+
+  const handleTrainingAdded = (message, severity = 'success') => {
+    setSnackbar({
+      open: true,
+      message: message,
+      severity: severity
+    });
+    fetchTrainings();
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   const getCustomerName = (training) => {
@@ -144,14 +165,16 @@ function Trainings() {
         <Typography variant="h4">
           Harjoitukset
         </Typography>
-        <TextField
-          label="Etsi harjoituksia"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => handleSearchChange(e.target.value)}
-          placeholder="Etsi aktiviteetilla, asiakkaalla, päivämäärällä..."
-          sx={{ width: '450px' }}
-        />
+        <Box display="flex" gap={2}>
+          <TextField
+            label="Etsi harjoituksia"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            size="small"
+          />
+          <AddTraining onTrainingAdded={handleTrainingAdded} />
+        </Box>
       </Box>
 
       <TableContainer component={Paper}>
@@ -210,6 +233,15 @@ function Trainings() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
