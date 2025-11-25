@@ -1,16 +1,30 @@
-# React + Vite
+﻿# Personal Trainer App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Front End -ohjelmoinnin harjoitustyö.
 
-Currently, two official plugins are available:
+## Rakenne
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Osa2
+Lisää seuraavat CRUD toiminnallisuudet asiakas ja harjoitus listasivuille:
+- Uuden asiakkaiden lisäys
+- Asiakkaan muokkaus ja poisto
+- Uuden harjoituksen lisääminen asiakkaalle. Käytä harjoituksen päivämäärän syöttöön jotain siihen soveltuvaa komponenttia
+- Harjoituksen poisto
 
-## React Compiler
+Lisää poistotoimintoihin myös vahvistus käyttäjältä.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Sivut
 
-## Expanding the ESLint configuration
+Asiakkaat: 
+<img width="1374" height="984" alt="image" src="https://github.com/user-attachments/assets/c457eabe-1145-45b7-b43d-4929d9dceff7" />
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Lisää asiakas:
+<img width="797" height="779" alt="image" src="https://github.com/user-attachments/assets/15e66b0a-03fb-4e0e-9843-62d6be5dfc5c" />
+
+Harjoitukset: 
+<img width="1205" height="943" alt="image" src="https://github.com/user-attachments/assets/e2bed49d-d728-442f-a9a5-a940a1bff80e" />
+
+Lisää harjoitus:
+<img width="767" height="520" alt="image" src="https://github.com/user-attachments/assets/4fb8301e-ede4-42d3-bba7-f8b69fb46864" />
+
+
