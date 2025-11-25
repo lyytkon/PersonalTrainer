@@ -13,8 +13,10 @@ import {
   TableSortLabel,
   Box,
   Snackbar,
-  Alert
+  Alert,
+  IconButton
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import AddCustomer from './AddCustomer';
 import EditCustomer from './EditCustomer';
 
@@ -75,6 +77,24 @@ function Customers() {
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
+  };
+
+  const deleteCustomer = (customer) => {
+    if (window.confirm(`Haluatko varmasti poistaa asiakkaan ${customer.firstname} ${customer.lastname}?`)) {
+      fetch(customer._links.self.href, {
+        method: 'DELETE'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Asiakkaan poisto epäonnistui');
+          }
+          handleCustomerAdded('Asiakas poistettu onnistuneesti!', 'success');
+        })
+        .catch(error => {
+          console.error('Virhe:', error);
+          handleCustomerAdded('Virhe asiakkaan poistossa', 'error');
+        });
+    }
   };
 
   const sortedAndFilteredCustomers = () => {
@@ -229,6 +249,13 @@ function Customers() {
                     customer={customer} 
                     onCustomerUpdated={handleCustomerAdded}
                   />
+                  <IconButton 
+                    onClick={() => deleteCustomer(customer)} 
+                    color="error"
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
