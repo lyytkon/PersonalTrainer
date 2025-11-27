@@ -14,11 +14,23 @@ import {
   Box
 } from '@mui/material';
 
+interface Customer {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  streetaddress: string;
+  postcode: string;
+  city: string;
+}
+
+type SortOrder = 'asc' | 'desc';
+
 function Customers() {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [orderBy, setOrderBy] = useState('lastname');
-  const [order, setOrder] = useState('asc');
+  const [order, setOrder] = useState<SortOrder>('asc');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -45,13 +57,13 @@ function Customers() {
       });
   };
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleSearchChange = (value) => {
+  const handleSearchChange = (value: string) => {
     setSearchTerm(value);
   };
 
@@ -80,8 +92,8 @@ function Customers() {
     });
 
     return filtered.sort((a, b) => {
-      const aValue = a[orderBy]?.toLowerCase() || '';
-      const bValue = b[orderBy]?.toLowerCase() || '';
+      const aValue = (a[orderBy as keyof Customer] as string)?.toLowerCase() || '';
+      const bValue = (b[orderBy as keyof Customer] as string)?.toLowerCase() || '';
 
       if (aValue < bValue) {
         return order === 'asc' ? -1 : 1;
