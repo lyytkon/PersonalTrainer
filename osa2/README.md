@@ -5,6 +5,7 @@ Front End -ohjelmoinnin harjoitustyö.
 ## Rakenne
 
 ## Osa2
+Teht:
 Lisää seuraavat CRUD toiminnallisuudet asiakas ja harjoitus listasivuille:
 - Uuden asiakkaiden lisäys
 - Asiakkaan muokkaus ja poisto
