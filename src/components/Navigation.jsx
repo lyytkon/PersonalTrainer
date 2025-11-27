@@ -6,7 +6,7 @@ function Navigation() {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Personal Trainer App
+          Personal Trainer Sovellus
         </Typography>
         <Box>
           <Button 
@@ -21,8 +21,16 @@ function Navigation() {
             color="inherit" 
             component={Link} 
             to="/trainings"
+            sx={{ mr: 2 }}
           >
             Harjoitukset
+          </Button>
+          <Button 
+            color="inherit" 
+            component={Link} 
+            to="/calendar"
+          >
+            Kalenteri
           </Button>
         </Box>
       </Toolbar>

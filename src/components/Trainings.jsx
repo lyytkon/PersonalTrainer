@@ -12,19 +12,24 @@ import {
   CircularProgress,
   TextField,
   TableSortLabel,
-  Box
+  Box,
+  Snackbar,
+  Alert,
+  IconButton
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddTraining from './AddTraining';
 
 function Trainings() {
   const [trainings, setTrainings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [orderBy, setOrderBy] = useState('date');
   const [order, setOrder] = useState('desc');
-  const [filters, setFilters] = useState({
-    activity: '',
-    customerName: '',
-    duration: '',
-    date: ''
+  const [searchTerm, setSearchTerm] = useState('');
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
   });
 
   useEffect(() => {
@@ -42,7 +47,6 @@ function Trainings() {
       .then(data => {
         console.log('Haettu harjoitusdata:', data);
         
-        // Haetaan asiakastiedot jokaiselle harjoitukselle
         const trainingsWithCustomers = data._embedded.trainings.map(training => {
           if (training._links.customer) {
             return fetch(training._links.customer.href)
@@ -73,12 +77,42 @@ function Trainings() {
     setOrderBy(property);
   };
 
-  const handleFilterChange = (field, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
   };
+
+  const handleTrainingAdded = (message, severity = 'success') => {
+    setSnackbar({
+      open: true,
+      message: message,
+      severity: severity
+    });
+    fetchTrainings();
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const deleteTraining = (training) => {
+    if (window.confirm(`Haluatko varmasti poistaa harjoituksen ${training.activity}?`)) {
+      fetch(training._links.self.href, {
+        method: 'DELETE'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Harjoituksen poisto epäonnistui');
+          }
+          handleTrainingAdded('Harjoitus poistettu onnistuneesti!', 'success');
+        })
+        .catch(error => {
+          console.error('Virhe:', error);
+          handleTrainingAdded('Virhe harjoituksen poistossa', 'error');
+        });
+    }
+  };
+
+
 
   const getCustomerName = (training) => {
     if (training.customer) {
@@ -89,16 +123,19 @@ function Trainings() {
 
   const sortedAndFilteredTrainings = () => {
     let filtered = trainings.filter(training => {
+      if (!searchTerm) return true;
+      
+      const search = searchTerm.toLowerCase();
       const activity = training.activity?.toLowerCase() || '';
       const customerName = getCustomerName(training).toLowerCase();
       const duration = training.duration?.toString() || '';
       const date = training.date ? dayjs(training.date).format('DD.MM.YYYY HH:mm') : '';
 
       return (
-        activity.includes(filters.activity.toLowerCase()) &&
-        customerName.includes(filters.customerName.toLowerCase()) &&
-        duration.includes(filters.duration) &&
-        date.includes(filters.date)
+        activity.includes(search) ||
+        customerName.includes(search) ||
+        duration.includes(search) ||
+        date.includes(search)
       );
     });
 
@@ -146,15 +183,27 @@ function Trainings() {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
-        Harjoitukset
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h4">
+          Harjoitukset
+        </Typography>
+        <Box display="flex" gap={2}>
+          <TextField
+            label="Etsi harjoituksia"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            size="small"
+          />
+          <AddTraining onTrainingAdded={handleTrainingAdded} />
+        </Box>
+      </Box>
 
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ minWidth: 1000 }}>
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 200 }}>
                 <TableSortLabel
                   active={orderBy === 'date'}
                   direction={orderBy === 'date' ? order : 'asc'}
@@ -162,17 +211,8 @@ function Trainings() {
                 >
                   Päivämäärä
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.date}
-                  onChange={(e) => handleFilterChange('date', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 200 }}>
                 <TableSortLabel
                   active={orderBy === 'activity'}
                   direction={orderBy === 'activity' ? order : 'asc'}
@@ -180,17 +220,8 @@ function Trainings() {
                 >
                   Aktiviteetti
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.activity}
-                  onChange={(e) => handleFilterChange('activity', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 100 }}>
                 <TableSortLabel
                   active={orderBy === 'duration'}
                   direction={orderBy === 'duration' ? order : 'asc'}
@@ -198,17 +229,8 @@ function Trainings() {
                 >
                   Kesto (min)
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.duration}
-                  onChange={(e) => handleFilterChange('duration', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 180 }}>
                 <TableSortLabel
                   active={orderBy === 'customerName'}
                   direction={orderBy === 'customerName' ? order : 'asc'}
@@ -216,15 +238,9 @@ function Trainings() {
                 >
                   Asiakas
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.customerName}
-                  onChange={(e) => handleFilterChange('customerName', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
+              </TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
+                Toiminnot
               </TableCell>
             </TableRow>
           </TableHead>
@@ -237,11 +253,26 @@ function Trainings() {
                 <TableCell>{training.activity || 'N/A'}</TableCell>
                 <TableCell>{training.duration || 'N/A'}</TableCell>
                 <TableCell>{getCustomerName(training)}</TableCell>
+                <TableCell>
+                  <IconButton onClick={() => deleteTraining(training)} 
+                  color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

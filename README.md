@@ -1,33 +1,16 @@
-﻿# Personal Trainer App
+# React + Vite
 
-Front End -ohjelmoinnin harjoitustyö.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Rakenne
+Currently, two official plugins are available:
 
-## Osa1
-- Asiakkaiden ja harjoitusten listaussivut navigaatiolla
-- Järjestely ja suodatus
-- Päivämäärien muotoilu
-- Asiakkaan nimi harjoituslistalla
-### Sivut
-Asiakkaat: 
-<img width="1263" height="1212" alt="image" src="https://github.com/user-attachments/assets/b8779a4b-0e29-45d7-9ed3-e85d68989a11" />
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Harjoitusket:
-<img width="908" height="891" alt="image" src="https://github.com/user-attachments/assets/b1e2edc4-2fae-4b20-8c20-b58846ce268a" />
+## React Compiler
 
-```bash
-cd osa1
-npm install
-npm run dev
-```
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Osa2
-- (Tulossa)
-  
-## Osa3
-- (Tulossa)
-  
-## Osa4
-- (Tulossa)
+## Expanding the ESLint configuration
 
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

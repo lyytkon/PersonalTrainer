@@ -11,22 +11,27 @@ import {
   CircularProgress,
   TextField,
   TableSortLabel,
-  Box
+  Box,
+  Snackbar,
+  Alert,
+  IconButton,
+  Button
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
+import AddCustomer from './AddCustomer';
+import EditCustomer from './EditCustomer';
 
 function Customers() {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [orderBy, setOrderBy] = useState('lastname');
   const [order, setOrder] = useState('asc');
-  const [filters, setFilters] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    phone: '',
-    streetaddress: '',
-    postcode: '',
-    city: ''
+  const [searchTerm, setSearchTerm] = useState('');
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
   });
 
   useEffect(() => {
@@ -59,15 +64,72 @@ function Customers() {
     setOrderBy(property);
   };
 
-  const handleFilterChange = (field, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [field]: value
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+
+  const handleCustomerAdded = (message, severity = 'success') => {
+    setSnackbar({
+      open: true,
+      message: message,
+      severity: severity
+    });
+    fetchCustomers();
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const deleteCustomer = (customer) => {
+    if (window.confirm(`Haluatko varmasti poistaa asiakkaan ${customer.firstname} ${customer.lastname}?`)) {
+      fetch(customer._links.self.href, {
+        method: 'DELETE'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Asiakkaan poisto epäonnistui');
+          }
+          handleCustomerAdded('Asiakas poistettu onnistuneesti!', 'success');
+        })
+        .catch(error => {
+          console.error('Virhe:', error);
+          handleCustomerAdded('Virhe asiakkaan poistossa', 'error');
+        });
+    }
+  };
+
+  const exportToCSV = () => {
+    const csvData = customers.map(customer => ({
+      Etunimi: customer.firstname,
+      Sukunimi: customer.lastname,
+      Sähköposti: customer.email,
+      Puhelin: customer.phone,
+      Osoite: customer.streetaddress,
+      Postinumero: customer.postcode,
+      Kaupunki: customer.city
     }));
+
+    const headers = Object.keys(csvData[0]).join(',');
+    const rows = csvData.map(row => Object.values(row).join(','));
+    const csv = [headers, ...rows].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'asiakkaat.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const sortedAndFilteredCustomers = () => {
     let filtered = customers.filter(customer => {
+      if (!searchTerm) return true;
+      
+      const search = searchTerm.toLowerCase();
       const firstname = customer.firstname?.toLowerCase() || '';
       const lastname = customer.lastname?.toLowerCase() || '';
       const email = customer.email?.toLowerCase() || '';
@@ -77,13 +139,13 @@ function Customers() {
       const city = customer.city?.toLowerCase() || '';
 
       return (
-        firstname.includes(filters.firstname.toLowerCase()) &&
-        lastname.includes(filters.lastname.toLowerCase()) &&
-        email.includes(filters.email.toLowerCase()) &&
-        phone.includes(filters.phone.toLowerCase()) &&
-        streetaddress.includes(filters.streetaddress.toLowerCase()) &&
-        postcode.includes(filters.postcode.toLowerCase()) &&
-        city.includes(filters.city.toLowerCase())
+        firstname.includes(search) ||
+        lastname.includes(search) ||
+        email.includes(search) ||
+        phone.includes(search) ||
+        streetaddress.includes(search) ||
+        postcode.includes(search) ||
+        city.includes(search)
       );
     });
 
@@ -101,25 +163,38 @@ function Customers() {
     });
   };
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
-        Asiakkaat
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h4">
+          Asiakkaat
+        </Typography>
+        <Box display="flex" gap={2}>
+          <TextField
+            label="Etsi asiakkaita"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Etsi nimellä, sähköpostilla, puhelimella..."
+            sx={{ width: '400px' }}
+          />
+          <Button 
+            variant="outlined" 
+            startIcon={<DownloadIcon />}
+            onClick={exportToCSV}
+          >
+            Vie CSV
+          </Button>
+          <AddCustomer onCustomerAdded={handleCustomerAdded} />
+        </Box>
+      </Box>
 
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ minWidth: 1000 }}>
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
                 <TableSortLabel
                   active={orderBy === 'firstname'}
                   direction={orderBy === 'firstname' ? order : 'asc'}
@@ -127,17 +202,8 @@ function Customers() {
                 >
                   Etunimi
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.firstname}
-                  onChange={(e) => handleFilterChange('firstname', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
                 <TableSortLabel
                   active={orderBy === 'lastname'}
                   direction={orderBy === 'lastname' ? order : 'asc'}
@@ -145,17 +211,8 @@ function Customers() {
                 >
                   Sukunimi
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.lastname}
-                  onChange={(e) => handleFilterChange('lastname', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 200 }}>
                 <TableSortLabel
                   active={orderBy === 'email'}
                   direction={orderBy === 'email' ? order : 'asc'}
@@ -163,17 +220,8 @@ function Customers() {
                 >
                   S-posti
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.email}
-                  onChange={(e) => handleFilterChange('email', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 150 }}>
                 <TableSortLabel
                   active={orderBy === 'phone'}
                   direction={orderBy === 'phone' ? order : 'asc'}
@@ -181,17 +229,8 @@ function Customers() {
                 >
                   Puhelin
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.phone}
-                  onChange={(e) => handleFilterChange('phone', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 180 }}>
                 <TableSortLabel
                   active={orderBy === 'streetaddress'}
                   direction={orderBy === 'streetaddress' ? order : 'asc'}
@@ -199,17 +238,8 @@ function Customers() {
                 >
                   Osoite
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.streetaddress}
-                  onChange={(e) => handleFilterChange('streetaddress', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 100 }}>
                 <TableSortLabel
                   active={orderBy === 'postcode'}
                   direction={orderBy === 'postcode' ? order : 'asc'}
@@ -217,17 +247,8 @@ function Customers() {
                 >
                   Postinumero
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.postcode}
-                  onChange={(e) => handleFilterChange('postcode', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
                 <TableSortLabel
                   active={orderBy === 'city'}
                   direction={orderBy === 'city' ? order : 'asc'}
@@ -235,15 +256,9 @@ function Customers() {
                 >
                   Kaupunki
                 </TableSortLabel>
-                <TextField
-                  size="small"
-                  placeholder="Suodata..."
-                  value={filters.city}
-                  onChange={(e) => handleFilterChange('city', e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  fullWidth
-                  sx={{ mt: 1 }}
-                />
+              </TableCell>
+              <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
+                Toiminnot
               </TableCell>
             </TableRow>
           </TableHead>
@@ -257,11 +272,33 @@ function Customers() {
                 <TableCell>{customer.streetaddress}</TableCell>
                 <TableCell>{customer.postcode}</TableCell>
                 <TableCell>{customer.city}</TableCell>
+                <TableCell>
+                  <EditCustomer 
+                    customer={customer} 
+                    onCustomerUpdated={handleCustomerAdded}
+                  />
+                  <IconButton 
+                    onClick={() => deleteCustomer(customer)} 
+                    color="error"
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
