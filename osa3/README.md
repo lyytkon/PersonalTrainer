@@ -1,16 +1,19 @@
-# React + Vite
+﻿# Personal Trainer App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Front End -ohjelmoinnin harjoitustyö.
 
-Currently, two official plugins are available:
+## Rakenne
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Osa3
+Teht:
+- Lisää export toiminnallisuus, jolla käyttäjä voi viedä asiakastiedot CSV tiedostoon. Suodata tiedostosta pois kaikki ylimääräinen tieto (esim. painike sarakkeet)
+- Lisää kalenterisivu, jossa näkyy kaikki varatut harjoitukset kalenterissa (viikkonäkymä, kuukausnäkymä, päivänäkymä). Kts. esimerkki kuva.
+- Asenna käyttöliittymä valitsemallesi pilvipalvelimelle
 
-## React Compiler
+Projekti on pilvipalvelimella (Netlify): https://personal-trainer-sovellus.netlify.app
+### Sivut
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Kalenteri: 
 
-## Expanding the ESLint configuration
+<img width="745" height="796" alt="image" src="https://github.com/user-attachments/assets/b955a5c9-095b-411e-ae71-709a76c84cdb" />
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
