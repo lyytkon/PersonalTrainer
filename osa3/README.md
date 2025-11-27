@@ -12,6 +12,9 @@ Teht:
 
 Projekti on pilvipalvelimella (Netlify): https://personal-trainer-sovellus.netlify.app
 ### Sivut
+Export ominaisuus:
+
+<img width="1000" height="562" alt="image" src="https://github.com/user-attachments/assets/10b7231f-e058-4e7e-82ee-223cb337ff36" />
 
 Kalenteri: 
 
