@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Calendar as BigCalendar, dayjsLocalizer } from 'react-big-calendar';
+import { Calendar as BigCalendar, dayjsLocalizer, View } from 'react-big-calendar';
 import dayjs from 'dayjs';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import 'dayjs/locale/fi';
+import { TrainingsResponse, Training } from '../types';
 
 dayjs.locale('fi');
 const localizer = dayjsLocalizer(dayjs);
 
+interface CalendarEvent {
+  title: string;
+  start: Date;
+  end: Date;
+  resource: Training;
+}
+
 function Calendar() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState(new Date());
-  const [view, setView] = useState('week');
+  const [view, setView] = useState<View>('week');
 
   useEffect(() => {
     fetchTrainings();
@@ -21,7 +29,7 @@ function Calendar() {
   const fetchTrainings = () => {
     fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/trainings')
       .then(response => response.json())
-      .then(data => {
+      .then((data: TrainingsResponse) => {
         const trainingsWithCustomers = data._embedded.trainings.map(training => {
           if (training._links.customer) {
             return fetch(training._links.customer.href)
@@ -36,7 +44,7 @@ function Calendar() {
 
         Promise.all(trainingsWithCustomers)
           .then(results => {
-            const calendarEvents = results.map(training => ({
+            const calendarEvents: CalendarEvent[] = results.map(training => ({
               title: `${training.activity} - ${training.customer ? training.customer.firstname + ' ' + training.customer.lastname : 'N/A'}`,
               start: new Date(training.date),
               end: dayjs(training.date).add(training.duration, 'minute').toDate(),
@@ -52,11 +60,11 @@ function Calendar() {
       });
   };
 
-  const handleNavigate = (newDate) => {
+  const handleNavigate = (newDate: Date) => {
     setDate(newDate);
   };
 
-  const handleViewChange = (newView) => {
+  const handleViewChange = (newView: View) => {
     setView(newView);
   };
 

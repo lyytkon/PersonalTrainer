@@ -1,10 +1,26 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { Customer } from '../types';
 
-function EditCustomer({ customer, onCustomerUpdated }) {
+interface EditCustomerProps {
+  customer: Customer;
+  onCustomerUpdated: (message: string, severity?: 'success' | 'error') => void;
+}
+
+interface CustomerFormData {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  streetaddress: string;
+  postcode: string;
+  city: string;
+}
+
+function EditCustomer({ customer, onCustomerUpdated }: EditCustomerProps) {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CustomerFormData>({
     firstname: customer.firstname || '',
     lastname: customer.lastname || '',
     email: customer.email || '',
@@ -31,7 +47,7 @@ function EditCustomer({ customer, onCustomerUpdated }) {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value

@@ -1,15 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, MenuItem, Select, InputLabel, FormControl, SelectChangeEvent } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AddIcon from '@mui/icons-material/Add';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { Customer, CustomersResponse } from '../types';
 
-function AddTraining({ onTrainingAdded }) {
+interface AddTrainingProps {
+  onTrainingAdded: (message: string, severity?: 'success' | 'error') => void;
+}
+
+interface TrainingFormData {
+  date: Dayjs;
+  activity: string;
+  duration: string;
+  customer: string;
+}
+
+function AddTraining({ onTrainingAdded }: AddTrainingProps) {
   const [open, setOpen] = useState(false);
-  const [customers, setCustomers] = useState([]);
-  const [formData, setFormData] = useState({
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [formData, setFormData] = useState<TrainingFormData>({
     date: dayjs(),
     activity: '',
     duration: '',
@@ -23,7 +35,7 @@ function AddTraining({ onTrainingAdded }) {
   const fetchCustomers = () => {
     fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers')
       .then(response => response.json())
-      .then(data => {
+      .then((data: CustomersResponse) => {
         setCustomers(data._embedded.customers);
       })
       .catch(error => console.error('Virhe haettaessa asiakkaita:', error));
@@ -43,18 +55,27 @@ function AddTraining({ onTrainingAdded }) {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
 
-  const handleDateChange = (newDate) => {
+  const handleSelectChange = (e: SelectChangeEvent) => {
     setFormData({
       ...formData,
-      date: newDate
+      [e.target.name]: e.target.value
     });
+  };
+
+  const handleDateChange = (newDate: Dayjs | null) => {
+    if (newDate) {
+      setFormData({
+        ...formData,
+        date: newDate
+      });
+    }
   };
 
   const handleSubmit = () => {
@@ -98,7 +119,7 @@ function AddTraining({ onTrainingAdded }) {
             <Select
               name="customer"
               value={formData.customer}
-              onChange={handleChange}
+              onChange={handleSelectChange}
               label="Asiakas"
             >
               {customers.map((customer) => (

@@ -10,9 +10,23 @@ import {
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 
-function AddCustomer({ onCustomerAdded }) {
+interface AddCustomerProps {
+  onCustomerAdded: (message: string, severity?: 'success' | 'error') => void;
+}
+
+interface CustomerFormData {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  streetaddress: string;
+  postcode: string;
+  city: string;
+}
+
+function AddCustomer({ onCustomerAdded }: AddCustomerProps) {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CustomerFormData>({
     firstname: '',
     lastname: '',
     email: '',
@@ -39,7 +53,7 @@ function AddCustomer({ onCustomerAdded }) {
     });
   };
 
-  const handleChange = (field, value) => {
+  const handleChange = (field: keyof CustomerFormData, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
