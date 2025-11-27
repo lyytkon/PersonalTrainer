@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Container, CssBaseline, Box } from '@mui/material';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { CssBaseline, Box } from '@mui/material';
 import Navigation from './components/Navigation';
 import Home from './components/Home';
 import Customers from './components/Customers';
@@ -26,4 +26,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

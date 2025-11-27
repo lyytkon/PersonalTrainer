@@ -8,7 +8,6 @@ import {
   TableContainer, 
   TableHead, 
   TableRow,
-  CircularProgress,
   TextField,
   TableSortLabel,
   Box,
@@ -21,14 +20,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import AddCustomer from './AddCustomer';
 import EditCustomer from './EditCustomer';
+import { Customer, CustomersResponse, SnackbarState, SortOrder } from '../types';
+
+type CustomerSortKey = 'firstname' | 'lastname' | 'email' | 'phone' | 'streetaddress' | 'postcode' | 'city';
 
 function Customers() {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [orderBy, setOrderBy] = useState('lastname');
-  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState<CustomerSortKey>('lastname');
+  const [order, setOrder] = useState<SortOrder>('asc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [snackbar, setSnackbar] = useState({
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     message: '',
     severity: 'success'
@@ -46,7 +48,7 @@ function Customers() {
         }
         return response.json();
       })
-      .then(data => {
+      .then((data: CustomersResponse) => {
         console.log('Haettu data:', data); 
         
         setCustomers(data._embedded.customers);
@@ -58,17 +60,17 @@ function Customers() {
       });
   };
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (property: CustomerSortKey) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleSearchChange = (value) => {
+  const handleSearchChange = (value: string) => {
     setSearchTerm(value);
   };
 
-  const handleCustomerAdded = (message, severity = 'success') => {
+  const handleCustomerAdded = (message: string, severity: 'success' | 'error' = 'success') => {
     setSnackbar({
       open: true,
       message: message,
@@ -81,7 +83,7 @@ function Customers() {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const deleteCustomer = (customer) => {
+  const deleteCustomer = (customer: Customer) => {
     if (window.confirm(`Haluatko varmasti poistaa asiakkaan ${customer.firstname} ${customer.lastname}?`)) {
       fetch(customer._links.self.href, {
         method: 'DELETE'

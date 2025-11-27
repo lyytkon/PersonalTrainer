@@ -19,14 +19,17 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddTraining from './AddTraining';
+import { Training, TrainingsResponse, SnackbarState, SortOrder } from '../types';
+
+type TrainingSortKey = 'date' | 'activity' | 'duration' | 'customerName';
 
 function Trainings() {
-  const [trainings, setTrainings] = useState([]);
+  const [trainings, setTrainings] = useState<Training[]>([]);
   const [loading, setLoading] = useState(true);
-  const [orderBy, setOrderBy] = useState('date');
-  const [order, setOrder] = useState('desc');
+  const [orderBy, setOrderBy] = useState<TrainingSortKey>('date');
+  const [order, setOrder] = useState<SortOrder>('desc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [snackbar, setSnackbar] = useState({
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     message: '',
     severity: 'success'
@@ -44,7 +47,7 @@ function Trainings() {
         }
         return response.json();
       })
-      .then(data => {
+      .then((data: TrainingsResponse) => {
         console.log('Haettu harjoitusdata:', data);
         
         const trainingsWithCustomers = data._embedded.trainings.map(training => {
@@ -71,17 +74,17 @@ function Trainings() {
       });
   };
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (property: TrainingSortKey) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleSearchChange = (value) => {
+  const handleSearchChange = (value: string) => {
     setSearchTerm(value);
   };
 
-  const handleTrainingAdded = (message, severity = 'success') => {
+  const handleTrainingAdded = (message: string, severity: 'success' | 'error' = 'success') => {
     setSnackbar({
       open: true,
       message: message,
@@ -94,7 +97,7 @@ function Trainings() {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const deleteTraining = (training) => {
+  const deleteTraining = (training: Training) => {
     if (window.confirm(`Haluatko varmasti poistaa harjoituksen ${training.activity}?`)) {
       fetch(training._links.self.href, {
         method: 'DELETE'
@@ -112,9 +115,7 @@ function Trainings() {
     }
   };
 
-
-
-  const getCustomerName = (training) => {
+  const getCustomerName = (training: Training): string => {
     if (training.customer) {
       return `${training.customer.firstname} ${training.customer.lastname}`;
     }
@@ -140,7 +141,8 @@ function Trainings() {
     });
 
     return filtered.sort((a, b) => {
-      let aValue, bValue;
+      let aValue: string | number | Date;
+      let bValue: string | number | Date;
 
       switch(orderBy) {
         case 'date':
