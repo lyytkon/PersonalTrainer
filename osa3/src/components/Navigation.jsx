@@ -21,8 +21,16 @@ function Navigation() {
             color="inherit" 
             component={Link} 
             to="/trainings"
+            sx={{ mr: 2 }}
           >
             Harjoitukset
+          </Button>
+          <Button 
+            color="inherit" 
+            component={Link} 
+            to="/calendar"
+          >
+            Kalenteri
           </Button>
         </Box>
       </Toolbar>
