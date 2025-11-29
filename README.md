@@ -1,16 +1,48 @@
-# React + Vite
+# Personal Trainer App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Front End -ohjelmoinnin harjoitustyö.
 
-Currently, two official plugins are available:
+Harjoitustyö on julkaistu: https://personal-trainer-sovellus.netlify.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Rakenne
+- Etusivu
+- Asiakkaat
+- Harjoitusket
+- Kalenteri
+- Tilastot
 
-## React Compiler
+## Tehtävä:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Osa1
+Luo React sovellus, jossa on omat listasivut asiakkaille (customer) ja harjoituksille (training). Luo myös navigaatio, jolla sivujen välillä voi siirtyä.
 
-## Expanding the ESLint configuration
+Listasivujen minimivaatimukset:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Asiakkaiden ja harjoitusten listaussivut navigaatiolla
+- Järjestely ja suodatus
+- Päivämäärien muotoilu
+- Asiakkaan nimi harjoituslistalla
+
+### Osa2
+Lisää seuraavat CRUD toiminnallisuudet asiakas ja harjoitus listasivuille:
+
+- Uuden asiakkaiden lisäys
+- Asiakkaan muokkaus ja poisto
+- Uuden harjoituksen lisääminen asiakkaalle. Käytä harjoituksen päivämäärän syöttöön jotain siihen soveltuvaa komponenttia
+- Harjoituksen poisto
+
+Lisää poistotoimintoihin myös vahvistus käyttäjältä.
+
+### Osa3
+- Lisää export toiminnallisuus, jolla käyttäjä voi viedä asiakastiedot CSV tiedostoon. Suodata tiedostosta pois kaikki ylimääräinen tieto (esim. painike sarakkeet)
+- Lisää kalenterisivu, jossa näkyy kaikki varatut harjoitukset kalenterissa (viikkonäkymä, kuukausnäkymä, päivänäkymä). Kts. esimerkki kuva.
+- Asenna käyttöliittymä valitsemallesi pilvipalvelimelle
+
+### Osa4
+Lisää tilastosivu, josta käyttäjä voi nähdä kuvaajassa kuinka paljon eri harjoitustyyppejä (activity) on ajallisesti varattu minuutteina  (esimerkki)
+
+Vinkki:
+- Sopiva komponentti kuvaajien esittämiseen on esim. https://github.com/recharts/recharts
+- lodash Javascript kirjasto tarjoaa käteviä funktioita taulukoiden käsittelyyn. Sillä voit esim. ryhmitellä ja laskea summia ryhmittäin: groupBy ja sumBy (https://lodash.com/)
+
+
