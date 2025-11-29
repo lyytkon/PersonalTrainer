@@ -18,8 +18,8 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
-import AddCustomer from './AddCustomer';
-import EditCustomer from './EditCustomer';
+import AddCustomer from '../components/AddCustomer';
+import EditCustomer from '../components/EditCustomer';
 import { Customer, CustomersResponse, SnackbarState, SortOrder } from '../types';
 
 type CustomerSortKey = 'firstname' | 'lastname' | 'email' | 'phone' | 'streetaddress' | 'postcode' | 'city';

@@ -18,7 +18,7 @@ import {
   IconButton
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddTraining from './AddTraining';
+import AddTraining from '../components/AddTraining';
 import { Training, TrainingsResponse, SnackbarState, SortOrder } from '../types';
 
 type TrainingSortKey = 'date' | 'activity' | 'duration' | 'customerName';
