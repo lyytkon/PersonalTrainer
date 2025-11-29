@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CssBaseline, Box } from '@mui/material';
 import Navigation from './components/Navigation';
-import Home from './components/Home';
-import Customers from './components/Customers';
-import Trainings from './components/Trainings';
-import Calendar from './components/Calendar';
-import Statistics from './components/Statistics';
+import Home from './pages/Home';
+import Customers from './pages/Customers';
+import Trainings from './pages/Trainings';
+import Calendar from './pages/Calendar';
+import Statistics from './pages/Statistics';
 import './App.css';
 
 function App() {
